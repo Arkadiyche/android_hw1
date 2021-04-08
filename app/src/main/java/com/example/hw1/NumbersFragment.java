@@ -2,6 +2,7 @@ package com.example.hw1;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,23 +16,26 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NumbersFragment extends Fragment implements View.OnClickListener {
+public class    NumbersFragment extends Fragment implements View.OnClickListener {
     private NumberAdapter adapter;
     private List<Data> numbers = new ArrayList<>();
+    private int count = 100;
 
     public NumbersFragment() {
         super();
-    }
-
-    static NumbersFragment newInstance() {
-        return new NumbersFragment();
     }
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        for (int i = 0; i < 100; ++i) {
+        if (savedInstanceState != null) {
+            //Log.d("countIf", String.valueOf(count));
+            count = savedInstanceState.getInt("NumCount", 100);
+            //savedInstanceState.putInt("NumCount",count);
+        }
+        //Log.d("count", String.valueOf(count));
+        for (int i = 0; i < count; ++i) {
             numbers.add(createItemToAdd());
         }
     }
@@ -58,6 +62,13 @@ public class NumbersFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         addItem();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle state) {
+        Log.d("onSaveInstanceState();", String.valueOf(numbers.size()));
+        state.putInt("NumCount", numbers.size());
+        super.onSaveInstanceState(state);
     }
 
     private void addItem() {
